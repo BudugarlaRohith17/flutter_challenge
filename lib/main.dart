@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inquiry/response/response.dart';
+import 'package:inquiry/screens/shipments_screen.dart';
 import 'api_client/network.dart';
 
 void main() {
@@ -61,7 +62,7 @@ class _MyAppState extends State<MyApp> {
           IconButton(
               onPressed: () {}, icon: const Icon(Icons.filter_alt_rounded)),
           PopupMenuButton(itemBuilder: (context) {
-            return const [
+            return [
               PopupMenuItem(
                 value: 0,
                 child: Text('Settings'),
@@ -69,6 +70,12 @@ class _MyAppState extends State<MyApp> {
               PopupMenuItem(
                 value: 1,
                 child: Text('Shipments'),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ShipmentsScreen()));
+                },
               ),
               PopupMenuItem(
                 value: 2,
@@ -78,31 +85,22 @@ class _MyAppState extends State<MyApp> {
           }),
         ],
       ),
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-            indicatorColor: Colors.black12,
-            labelTextStyle: MaterialStateProperty.all(
-                const TextStyle(fontWeight: FontWeight.w300, fontSize: 12))),
-        child: NavigationBar(
-          onDestinationSelected: (index) {
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items:  const [
+          BottomNavigationBarItem(
+            label: 'Instant Rates',
+            icon: Icon(Icons.search),
 
-          },
-          height: 60,
-          selectedIndex: 1,
-          destinations: const [
-            NavigationDestination(
-                icon: Icon(Icons.search_rounded), label: 'Instant Rates'),
-            NavigationDestination(
-                icon: Icon(Icons.mail_sharp), label: 'Inquires'),
-            NavigationDestination(
-                icon: Icon(Icons.directions_boat_filled), label: 'Shipments'),
-            NavigationDestination(icon: Icon(Icons.more_vert), label: 'More'),
-          ],
-        ),
+          ),
+          BottomNavigationBarItem(
+              label: 'Shipments', icon: Icon(Icons.directions_boat_sharp)),
+          BottomNavigationBarItem(
+              label: 'Inqurires', icon: Icon(Icons.message_outlined)),
+          BottomNavigationBarItem(label: 'more', icon: Icon(Icons.more_vert))
+        ],
       ),
-      body: //screens[index],
-
-          Center(
+      body: Center(
         child: FutureBuilder(
           future: postUsers,
           builder: (context, snapshot) {
@@ -200,8 +198,8 @@ class _MyAppState extends State<MyApp> {
                                     const Text('Created By'),
                                     Text(
                                       snapshot.data!.inquiries![index].user!
-                                              .userFirstName
-                                              .toString(),
+                                          .userFirstName
+                                          .toString(),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
