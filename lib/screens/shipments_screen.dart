@@ -11,9 +11,7 @@ class _ShipmentsScreenState extends State<ShipmentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Shipments'),
-      ),
+      body: Text('Shipments'),
     );
   }
 }

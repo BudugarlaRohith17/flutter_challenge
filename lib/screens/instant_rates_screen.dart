@@ -10,10 +10,9 @@ class InstantRatesScreen extends StatefulWidget {
 class _InstantRatesScreenState extends State<InstantRatesScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Hello'),
-      ),
+    return const Scaffold(
+      body: Text('Instant Rates'),
     );
   }
 }
+

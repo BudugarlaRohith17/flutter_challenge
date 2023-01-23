@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:inquiry/response/response.dart';
+import 'package:inquiry/screens/inquires.dart';
+import 'package:inquiry/screens/instant_rates_screen.dart';
+import 'package:inquiry/screens/more.dart';
 import 'package:inquiry/screens/shipments_screen.dart';
+
 import 'api_client/network.dart';
 
 void main() {
@@ -24,7 +28,7 @@ class _MyAppState extends State<MyApp> {
             content: TextField(
               onChanged: (value) {},
               decoration:
-                  const InputDecoration(hintText: 'Enter Inquiry Number'),
+              const InputDecoration(hintText: 'Enter Inquiry Number'),
             ),
             actions: [
               TextButton(
@@ -46,6 +50,15 @@ class _MyAppState extends State<MyApp> {
 
   late List<Inquiries>? res;
 
+  int _currentIndex=0;
+  final tabs =[
+    const Center(child: Inquries()),
+    const Center(child: InstantRatesScreen()),
+    const Center(child: ShipmentsScreen()),
+    const Center(child: MoreScreen()),
+
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,22 +75,22 @@ class _MyAppState extends State<MyApp> {
           IconButton(
               onPressed: () {}, icon: const Icon(Icons.filter_alt_rounded)),
           PopupMenuButton(itemBuilder: (context) {
-            return [
-              PopupMenuItem(
+            return  [
+              const PopupMenuItem(
                 value: 0,
                 child: Text('Settings'),
               ),
               PopupMenuItem(
                 value: 1,
-                child: Text('Shipments'),
+                child: const Text('Shipments'),
                 onTap: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ShipmentsScreen()));
+                          builder: (context) => const ShipmentsScreen()));
                 },
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: 2,
                 child: Text('Inquiries'),
               ),
@@ -86,173 +99,26 @@ class _MyAppState extends State<MyApp> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
         type: BottomNavigationBarType.fixed,
         items:  const [
-          BottomNavigationBarItem(
-            label: 'Instant Rates',
-            icon: Icon(Icons.search),
 
-          ),
+          BottomNavigationBarItem(
+              label: 'Inquires', icon: Icon(Icons.message_outlined)),
+          BottomNavigationBarItem(
+            label: 'Instant Rates', icon: Icon(Icons.search),),
           BottomNavigationBarItem(
               label: 'Shipments', icon: Icon(Icons.directions_boat_sharp)),
-          BottomNavigationBarItem(
-              label: 'Inqurires', icon: Icon(Icons.message_outlined)),
+
           BottomNavigationBarItem(label: 'more', icon: Icon(Icons.more_vert))
         ],
+        onTap: (index){
+          setState(() {
+            _currentIndex=index;
+          });
+        },
       ),
-      body: Center(
-        child: FutureBuilder(
-          future: postUsers,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              res = snapshot.data?.inquiries;
-              return ListView.builder(
-                itemCount: snapshot.data?.inquiries?.length,
-                itemBuilder: (context, index) {
-                  String inquiryResult =
-                      snapshot.data!.inquiries![index].inquiryNumber.toString();
-                  String originResult = snapshot
-                      .data!.inquiries![index].searchData!.originPort!.portname!
-                      .toString();
-                  String destinationResult = snapshot.data!.inquiries![index]
-                      .searchData!.destinationPort!.portname!
-                      .toString();
-                  String createdAtResult = snapshot
-                      .data!.inquiries![index].salesUser!.createdAt
-                      .toString()
-                      .split(' ')
-                      .first;
-                  String salesPersonResult = snapshot
-                      .data!.inquiries![index].salesUser!.userLastName!
-                      .toString();
-                  var colorCode = snapshot.data!.inquiries![index]
-                      .currentStatus!.colorCode!.hashCode;
-
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Card(
-                        shape: const RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.black)),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(inquiryResult,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                    )),
-                                Card(
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.horizontal(),
-                                  ),
-                                  //color: Colors.black12,
-                                  child: Text(
-                                    snapshot.data!.inquiries![index]
-                                        .currentStatus!.status
-                                        .toString(),
-                                    style: TextStyle(
-                                        color:
-                                            Color(colorCode).withOpacity(1.0)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20.0),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  children: [
-                                    Text(
-                                      originResult,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    const Icon(
-                                        Icons.directions_boat_filled_outlined),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    Text(destinationResult,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold)),
-                                    const Icon(
-                                      Icons.directions_boat_filled_rounded,
-                                      color: Colors.blueGrey,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 10.0,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  children: [
-                                    const Text('Created By'),
-                                    Text(
-                                      snapshot.data!.inquiries![index].user!
-                                          .userFirstName
-                                          .toString(),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        const Text('Created On'),
-                                        Text(
-                                          createdAtResult,
-                                          overflow: TextOverflow.ellipsis,
-                                        )
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: const [
-                                        Text('Company'),
-                                        Text('Freightify')
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    Column(
-                                      children: [
-                                        const Text('Sales Person'),
-                                        Text(salesPersonResult)
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              );
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error})');
-            }
-            return const CircularProgressIndicator();
-          },
-        ),
-      ),
+      body: tabs[_currentIndex],
     );
   }
 }
