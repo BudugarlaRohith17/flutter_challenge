@@ -14,7 +14,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int index=0;
   void openDialog() {
     showDialog(
         context: context,
@@ -60,8 +59,7 @@ class _MyAppState extends State<MyApp> {
               },
               icon: const Icon(Icons.search)),
           IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.filter_alt_rounded)),
+              onPressed: () {}, icon: const Icon(Icons.filter_alt_rounded)),
           PopupMenuButton(itemBuilder: (context) {
             return const [
               PopupMenuItem(
@@ -77,36 +75,34 @@ class _MyAppState extends State<MyApp> {
                 child: Text('Inquiries'),
               ),
             ];
-          })
+          }),
         ],
       ),
-
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          indicatorColor: Colors.black12,
-          labelTextStyle: MaterialStateProperty.all(const TextStyle(fontWeight: FontWeight.w300,fontSize: 12))
-        ),
+            indicatorColor: Colors.black12,
+            labelTextStyle: MaterialStateProperty.all(
+                const TextStyle(fontWeight: FontWeight.w300, fontSize: 12))),
         child: NavigationBar(
-          onDestinationSelected: (index){
-            setState(() {
-              this.index=index;
-            });
+          onDestinationSelected: (index) {
+
           },
           height: 60,
-          selectedIndex: index,
+          selectedIndex: 1,
           destinations: const [
-            NavigationDestination(icon: Icon(Icons.search_rounded), label: 'Instant Rates'),
-            NavigationDestination(icon: Icon(Icons.mail_sharp), label: 'Inquries'),
-            NavigationDestination(icon: Icon(Icons.directions_boat_filled), label: 'Shipments'),
+            NavigationDestination(
+                icon: Icon(Icons.search_rounded), label: 'Instant Rates'),
+            NavigationDestination(
+                icon: Icon(Icons.mail_sharp), label: 'Inquires'),
+            NavigationDestination(
+                icon: Icon(Icons.directions_boat_filled), label: 'Shipments'),
             NavigationDestination(icon: Icon(Icons.more_vert), label: 'More'),
-
-
           ],
         ),
       ),
-      body://screens[index],
+      body: //screens[index],
 
-     Center(
+          Center(
         child: FutureBuilder(
           future: postUsers,
           builder: (context, snapshot) {
@@ -131,7 +127,8 @@ class _MyAppState extends State<MyApp> {
                   String salesPersonResult = snapshot
                       .data!.inquiries![index].salesUser!.userLastName!
                       .toString();
-                   var colorCode = snapshot.data!.inquiries![index].currentStatus!.colorCode!.hashCode;
+                  var colorCode = snapshot.data!.inquiries![index]
+                      .currentStatus!.colorCode!.hashCode;
 
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,17 +141,22 @@ class _MyAppState extends State<MyApp> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                 Text(inquiryResult,
-                                    style: const TextStyle(color: Colors.black,)),
+                                Text(inquiryResult,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                    )),
                                 Card(
-
                                   shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.horizontal(),
                                   ),
                                   //color: Colors.black12,
                                   child: Text(
-                                    snapshot.data!.inquiries![index].currentStatus!.status.toString(),
-                                    style: TextStyle(color: Color(colorCode).withOpacity(1.0)),
+                                    snapshot.data!.inquiries![index]
+                                        .currentStatus!.status
+                                        .toString(),
+                                    style: TextStyle(
+                                        color:
+                                            Color(colorCode).withOpacity(1.0)),
                                   ),
                                 ),
                               ],
@@ -199,7 +201,7 @@ class _MyAppState extends State<MyApp> {
                                     Text(
                                       snapshot.data!.inquiries![index].user!
                                               .userFirstName
-                                              .toString() ?? '',
+                                              .toString(),
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ],
@@ -242,7 +244,6 @@ class _MyAppState extends State<MyApp> {
                           ],
                         ),
                       ),
-
                     ],
                   );
                 },
