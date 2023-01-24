@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inquiry/screens/shipments_screen.dart';
 import '../api_client/network.dart';
 import '../response/response.dart';
 
@@ -10,6 +11,35 @@ class Inquries extends StatefulWidget {
 }
 
 class _InquriesState extends State<Inquries> {
+  final TextEditingController _controller = TextEditingController();
+
+  void openDialog() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Search Inquiry'),
+            content: TextField(
+              controller: _controller,
+
+              decoration:
+              const InputDecoration(hintText: 'Enter Inquiry Number'),
+            ),
+            actions: [
+              Center(
+                  child:
+                  ElevatedButton(onPressed: () {
+                    var tempList = _searchList!.where((inquiry) => inquiry.inquiryNumber == _controller.text).toList();
+                      print(tempList.length);
+
+                  },
+                      child: const Text('submit'))
+              ),
+            ],
+          );
+
+        });
+  }
 
   late Future<Inquires> postUsers;
   @override
@@ -18,28 +48,61 @@ class _InquriesState extends State<Inquries> {
     postUsers = ApiClient().fetchUsers();
   }
 
-  late List<Inquiries>? res;
+  List<Inquiries>? _searchList;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Inquiry'),
+        centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                openDialog();
+              },
+              icon: const Icon(Icons.search)),
+          IconButton(
+              onPressed: () {}, icon: const Icon(Icons.filter_alt_rounded)),
+          PopupMenuButton(itemBuilder: (context) {
+            return [
+              const PopupMenuItem(
+                value: 0,
+                child: Text('Settings'),
+              ),
+              PopupMenuItem(
+                value: 1,
+                child: const Text('Shipments'),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ShipmentsScreen()));
+                },
+              ),
+              const PopupMenuItem(
+                value: 2,
+                child: Text('Inquiries'),
+              ),
+            ];
+          }),
+        ],
+      ),
       body: Center(
         child: FutureBuilder(
           future: postUsers,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              res = snapshot.data?.inquiries;
+              _searchList = snapshot.data?.inquiries;
               return ListView.builder(
                 itemCount: snapshot.data?.inquiries?.length,
                 itemBuilder: (context, index) {
                   String inquiryResult =
                   snapshot.data!.inquiries![index].inquiryNumber.toString();
                   String originResult = snapshot
-                      .data!.inquiries![index].searchData!.originPort!.portname!
-                      .toString();
+                      .data!.inquiries![index].searchData!.originPort!.portCode.toString();
                   String destinationResult = snapshot.data!.inquiries![index]
-                      .searchData!.destinationPort!.portname!
-                      .toString();
+                      .searchData!.destinationPort!.portCode.toString();
                   String createdAtResult = snapshot
                       .data!.inquiries![index].salesUser!.createdAt
                       .toString()
@@ -49,7 +112,7 @@ class _InquriesState extends State<Inquries> {
                       .data!.inquiries![index].salesUser!.userLastName!
                       .toString();
                   var colorCode = snapshot.data!.inquiries![index]
-                      .currentStatus!.colorCode!.hashCode;
+                      .currentStatus!.colorCode!.replaceAll("#", "0xff");
 
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,19 +129,14 @@ class _InquriesState extends State<Inquries> {
                                     style: const TextStyle(
                                       color: Colors.black,
                                     )),
-                                Card(
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.horizontal(),
+                                Container(
+                                  width: 70.0,
+                                  alignment: Alignment.centerRight,
+                                  decoration: BoxDecoration(
+                                    color: Color(int.parse(colorCode)),
+                                    borderRadius: BorderRadius.circular(5.0),
                                   ),
-                                  //color: Colors.black12,
-                                  child: Text(
-                                    snapshot.data!.inquiries![index]
-                                        .currentStatus!.status
-                                        .toString(),
-                                    style: TextStyle(
-                                        color:
-                                        Color(colorCode).withOpacity(1.0)),
-                                  ),
+                                  child: Text(snapshot.data!.inquiries![index].currentStatus!.status!, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
                                 ),
                               ],
                             ),
