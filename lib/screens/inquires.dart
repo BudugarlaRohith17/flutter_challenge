@@ -130,11 +130,12 @@ class _InquriesState extends State<Inquries> {
                                       color: Colors.black,
                                     )),
                                 Container(
-                                  width: 70.0,
-                                  alignment: Alignment.centerRight,
+                                  width: 75.0,
+                                  alignment: Alignment.center,
                                   decoration: BoxDecoration(
                                     color: Color(int.parse(colorCode)),
-                                    borderRadius: BorderRadius.circular(5.0),
+                                    borderRadius:const BorderRadius.horizontal(left: Radius.circular(50)),
+
                                   ),
                                   child: Text(snapshot.data!.inquiries![index].currentStatus!.status!, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
                                 ),
