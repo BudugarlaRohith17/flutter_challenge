@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../api_client/network.dart';
 import '../response/response.dart';
 
@@ -28,7 +27,7 @@ class _InstantRatesScreenState extends State<InstantRatesScreen> {
         future: postUsers,
         builder: (context,snapshot){
           return ListView.builder(
-            itemCount: snapshot.data!.inquiries!.length,
+            itemCount: snapshot.data?.inquiries?.length,
             itemBuilder: (context,index){
               return Card(
                 child: Text(snapshot.data!.inquiries![index].salesUser!.email!.toString()),

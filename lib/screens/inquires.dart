@@ -21,23 +21,22 @@ class _InquriesState extends State<Inquries> {
             title: const Text('Search Inquiry'),
             content: TextField(
               controller: _controller,
-
               decoration:
-              const InputDecoration(hintText: 'Enter Inquiry Number'),
+                  const InputDecoration(hintText: 'Enter Inquiry Number'),
             ),
             actions: [
               Center(
-                  child:
-                  ElevatedButton(onPressed: () {
-                    var tempList = _searchList!.where((inquiry) => inquiry.inquiryNumber == _controller.text).toList();
-                      print(tempList.length);
-
-                  },
-                      child: const Text('submit'))
-              ),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        var tempList = _searchList!
+                            .where((inquiry) =>
+                                inquiry.inquiryNumber == _controller.text)
+                            .toList();
+                        print(tempList.length);
+                      },
+                      child: const Text('submit'))),
             ],
           );
-
         });
   }
 
@@ -98,11 +97,13 @@ class _InquriesState extends State<Inquries> {
                 itemCount: snapshot.data?.inquiries?.length,
                 itemBuilder: (context, index) {
                   String inquiryResult =
-                  snapshot.data!.inquiries![index].inquiryNumber.toString();
+                      snapshot.data!.inquiries![index].inquiryNumber.toString();
                   String originResult = snapshot
-                      .data!.inquiries![index].searchData!.originPort!.portCode.toString();
+                      .data!.inquiries![index].searchData!.originPort!.portCode
+                      .toString();
                   String destinationResult = snapshot.data!.inquiries![index]
-                      .searchData!.destinationPort!.portCode.toString();
+                      .searchData!.destinationPort!.portCode
+                      .toString();
                   String createdAtResult = snapshot
                       .data!.inquiries![index].salesUser!.createdAt
                       .toString()
@@ -111,15 +112,17 @@ class _InquriesState extends State<Inquries> {
                   String salesPersonResult = snapshot
                       .data!.inquiries![index].salesUser!.userLastName!
                       .toString();
-                  var colorCode = snapshot.data!.inquiries![index]
-                      .currentStatus!.colorCode!.replaceAll("#", "0xff");
+                  var colorCode = snapshot
+                      .data!.inquiries![index].currentStatus!.colorCode!
+                      .replaceAll("#", "0xff");
 
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Card(
+
                         shape: const RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.black)),
+                            side: BorderSide(color: Colors.black,)),
                         child: Column(
                           children: [
                             Row(
@@ -134,16 +137,22 @@ class _InquriesState extends State<Inquries> {
                                   alignment: Alignment.center,
                                   decoration: BoxDecoration(
                                     color: Color(int.parse(colorCode)),
-                                    borderRadius:const BorderRadius.horizontal(left: Radius.circular(50)),
-
+                                    borderRadius: const BorderRadius.horizontal(
+                                        left: Radius.circular(50)),
                                   ),
-                                  child: Text(snapshot.data!.inquiries![index].currentStatus!.status!, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),),
+                                  child: Text(
+                                    snapshot.data!.inquiries![index]
+                                        .currentStatus!.status!,
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600),
+                                  ),
                                 ),
                               ],
                             ),
                             const SizedBox(height: 20.0),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Column(
                                   children: [
@@ -152,8 +161,13 @@ class _InquriesState extends State<Inquries> {
                                       style: const TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
-                                    const Icon(
-                                        Icons.directions_boat_filled_outlined),
+                                  ],
+                                ),
+                                Column(
+                                  children: const [
+                                    Icon(Icons.directions_boat),
+                                    Text(
+                                        '-------------------------------------'),
                                   ],
                                 ),
                                 Column(
@@ -161,13 +175,12 @@ class _InquriesState extends State<Inquries> {
                                     Text(destinationResult,
                                         style: const TextStyle(
                                             fontWeight: FontWeight.bold)),
-                                    const Icon(
-                                      Icons.directions_boat_filled_rounded,
-                                      color: Colors.blueGrey,
-                                    ),
+
                                   ],
+
                                 ),
                               ],
+
                             ),
                             const SizedBox(
                               height: 10.0,
